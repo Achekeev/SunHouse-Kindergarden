@@ -1,4 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+
+sex_choices = (
+    ('Мама', 'Мама'),
+    ('Папа', 'Папа')
+)
 
 
 class Child(models.Model):
@@ -15,10 +22,9 @@ class Child(models.Model):
         return f'{self.kids_first_name} {self.kids_last_name}'
 
 
-class Parent(models.Model):
-    first_name = models.CharField(max_length=255, verbose_name='Имя Родителя')
-    last_name = models.CharField(max_length=255, verbose_name='Фамилия Родителя')
-    child = models.ForeignKey(Child, verbose_name='Ребенок')
+class Parent(AbstractUser):
+    child = models.ManyToManyField(Child, verbose_name='Ребенок')
+    sex = models.CharField(choices=sex_choices, verbose_name='Пол')
 
     class Meta:
         verbose_name = 'Родитель'
